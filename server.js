@@ -28,14 +28,21 @@ app.post("/download", async (req, res) => {
 
     const ytdlp = new YtDlpWrap();
 
+    // ⭐ CLOUD-SAFE YT-DLP FLAGS
     await ytdlp.exec([
       url,
+      "--no-check-certificates",
+      "--force-ipv4",
+      "-f",
+      "mp4",
       "-o",
       outputPath
     ]);
 
+    // Read file
     const fileBuffer = fs.readFileSync(outputPath);
 
+    // Upload to Supabase
     const { data, error } = await supabase.storage
       .from("videos")
       .upload(`video-${Date.now()}.mp4`, fileBuffer, {
@@ -43,6 +50,7 @@ app.post("/download", async (req, res) => {
         upsert: true
       });
 
+    // Delete temp file
     fs.unlinkSync(outputPath);
 
     if (error) {
