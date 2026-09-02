@@ -26,7 +26,8 @@ app.post("/download", async (req, res) => {
 
     const outputPath = path.join(__dirname, "video.mp4");
 
-    const ytdlp = new YtDlpWrap("/usr/local/bin/yt-dlp");
+    // ⭐ USE LOCAL PROJECT BINARY (Render-safe)
+    const ytdlp = new YtDlpWrap(path.join(__dirname, "yt-dlp"));
 
     // ⭐ CLOUD-SAFE YT-DLP FLAGS
     await ytdlp.exec([
