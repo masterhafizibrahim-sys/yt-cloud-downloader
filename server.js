@@ -1,3 +1,25 @@
+const express = require("express");
+const { YtDlpWrap } = require("yt-dlp-wrap");
+const path = require("path");
+const fs = require("fs");
+const cors = require("cors");
+
+// Create express app
+const app = express();
+app.use(express.json());
+app.use(cors());
+
+// Supabase
+const { createClient } = require("@supabase/supabase-js");
+
+const SUPABASE_URL = "https://xofocbnjdkyxamftndxm.supabase.co";
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
+// =========================
+// 🔥 DOWNLOAD ROUTE
+// =========================
 app.post("/download", async (req, res) => {
   try {
     console.log("🔥 /download hit!");
@@ -82,4 +104,19 @@ app.post("/download", async (req, res) => {
     console.log("Full error:", err);
     return res.status(500).json({ error: "Download failed" });
   }
+});
+
+// =========================
+// ROOT ROUTE
+// =========================
+app.get("/", (req, res) => {
+  res.send("yt-cloud-downloader server is running!");
+});
+
+// =========================
+// START SERVER
+// =========================
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
