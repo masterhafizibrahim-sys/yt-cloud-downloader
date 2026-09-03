@@ -26,18 +26,17 @@ app.post("/download", async (req, res) => {
 
     const outputPath = path.join(__dirname, "video.mp4");
 
-    // ⭐ USE LOCAL PROJECT BINARY (Render-safe)
+    // Use local yt-dlp binary
     const ytdlp = new YtDlpWrap(path.join(__dirname, "yt-dlp"));
 
-    // ⭐ CLOUD-SAFE YT-DLP FLAGS
+    // Use cookies.txt to bypass YouTube blocking
     await ytdlp.exec([
       url,
+      "--cookies", path.join(__dirname, "cookies.txt"),
       "--no-check-certificates",
       "--force-ipv4",
-      "-f",
-      "mp4",
-      "-o",
-      outputPath
+      "-f", "mp4",
+      "-o", outputPath
     ]);
 
     // Read file
